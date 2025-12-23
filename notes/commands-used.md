@@ -64,6 +64,7 @@ systemctl status nginx
 Send test email (via webmail)
 Performed through Roundcube web interface.
 
+### Additional useful commands
 Check mail logs
 tail -f /var/log/mail.log
 🧹 Helpful System Commands
