@@ -52,7 +52,6 @@ Mail servers must use a clean hostname that matches DNS and reverse DNS.
 I verified the current hostname and then changed it to the mail FQDN.
 
 ![Checking hostname](screenshots/hostname.png)
-![Changing hostname to mail.vibinsec.live](screenshots/hostname_change.png)
 
 ---
 
@@ -62,7 +61,7 @@ To avoid local hostname resolution issues, I updated `/etc/hosts` so the server 
 Example (what matters is the pattern):
 - `IP  domain  mail`
 
-![Editing /etc/hosts](screenshots/nano%20etchost.png)
+![Changing hostname to mail.vibinsec.live](screenshots/hostname_change.png)
 
 ---
 
@@ -84,7 +83,7 @@ I created an **MX record** to tell the internet where mail for the domain should
 - Value: `mail.vibinsec.live`
 - Priority: `10`
 
-![MX record set to mail.vibinsec.live](screenshots/mx%20record.png)
+![MX record set to mail.vibinsec.live](screenshots/mx_record.png)
 
 ---
 
@@ -141,12 +140,12 @@ I kept useful defaults enabled such as:
 ### 6.6 Installation completed
 Once the installer finished, iRedMail displayed the access URLs and credentials.
 
-⚠️ Important: Don’t commit your real passwords into GitHub.  
-(For the lab screenshot, it shows the output, but in README you can redact if you want.)
-
 ![iRedMail installed successfully](screenshots/redmail-installed.png)
 
 ---
+Amavisd show keys reaveals th DKIM.domain key
+
+![amavis](amavis-keys.png)
 
 ## 7) Verify iRedAdmin dashboard
 After installation, I confirmed the admin panel was reachable and shows correct server/domain info.
@@ -171,7 +170,6 @@ The certificate was saved under:
 - `/etc/letsencrypt/live/mail.vibinsec.live/`
 
 ![Certificate generated successfully](screenshots/registered.png)
-![Cert files + service restart sequence](screenshots/suc2.png)
 
 ---
 
@@ -198,9 +196,11 @@ I updated `/etc/dovecot/dovecot.conf` so Dovecot uses:
 ### 9.3 Update Nginx SSL template (webmail + admin panel)
 I updated the iRedMail Nginx SSL template to use the Let’s Encrypt certificate.
 
-![Nginx SSL template updated](screenshots/editing%20ssl.png)
+![Nginx SSL template updated](screenshots/editing_ssl.png)
 
 ---
+Restarting all services
+![Restarting_services](restartinserv.png)
 
 ## 10) Configure DKIM (mail signing) and capture DKIM key
 DKIM helps prevent spoofing and improves delivery by signing outgoing emails.
@@ -222,7 +222,22 @@ SPF tells receivers which IPs are allowed to send mail for your domain.
 ### 11.2 DMARC
 DMARC adds policy + reporting on top of SPF/DKIM.
 
-I added the SPF and DMARC TXT records in Namecheap.
+Generating and adding SPF and Dmarc record
+Created **SPF record** which essentially prevents unauthorized servers from sending mail as our domain
+**dmarc record**  for  policy enforcement and reporting, giving domain owners control over unauthenticated mail and visibility into who's sending mail using our domain. 
+
+Both have,
+- Type: `TXT`
+
+For SPF
+- Host: `@`
+- Value: `v=spf1 ip4:173.249.31.162 ip6:2a02:c207:2254:2565 :...`
+
+For dmarc
+- Host: `_dmarc`
+- Value: `v=DMARC1; p=none; fo=1; rua=mailto:dmarc@vibins...`
+
+I added the SPF and DMARC TXT records in namecheap domains dashboard
 
 ![SPF + DMARC records](screenshots/spf_dmarc.png)
 
@@ -262,19 +277,18 @@ I verified the email arrived externally (one test landed in Spam initially, whic
 
 ![Mail received in Gmail (spam test)](screenshots/received.png)
 
-### 14.3 Sent lab email to professor / external user
+### 14.3 Sent lab email to external user
 I sent a proper lab email as confirmation.
-
-![Mail sent to recipient (lab confirmation)](screenshots/praveen%20mail.png)
-
-### 14.4 Received reply back successfully
-Finally, I received a reply back to my server inbox — confirming full send/receive loop is working.
 
 ![Reply received successfully](screenshots/suc.png)
 
+Finally, I received a reply back to my server inbox — confirming full send/receive loop is working.
+
+![Reply received successfully](screenshots/suc2.png)
+
 ---
 
-## 🧾 Summary (what I actually did in this lab)
+## 🧾 Summary what we actually did till now:
 I deployed a real SMTP mail server using iRedMail on a VPS and connected it to my custom domain. I configured DNS (A + MX), set reverse DNS (PTR), enabled TLS using Let’s Encrypt, and added SPF/DKIM/DMARC records to improve trust and deliverability. After applying certificate paths in Postfix, Dovecot, and Nginx, I restarted services and verified that outgoing messages reach external providers and incoming replies are received correctly. This lab gave me hands-on understanding of real mail server architecture and the security controls used to prevent spoofing and improve email reputation.
 
 ---
