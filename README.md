@@ -145,7 +145,7 @@ Once the installer finished, iRedMail displayed the access URLs and credentials.
 ---
 Amavisd show keys reaveals th DKIM.domain key
 
-![amavis](amavis-keys.png)
+![amavis](screenshots/amavis-keys.png)
 
 ## 7) Verify iRedAdmin dashboard
 After installation, I confirmed the admin panel was reachable and shows correct server/domain info.
@@ -200,7 +200,7 @@ I updated the iRedMail Nginx SSL template to use the Let’s Encrypt certificate
 
 ---
 Restarting all services
-![Restarting_services](restartinserv.png)
+![Restarting_services](screenshots/restartinserv.png)
 
 ## 10) Configure DKIM (mail signing) and capture DKIM key
 DKIM helps prevent spoofing and improves delivery by signing outgoing emails.
